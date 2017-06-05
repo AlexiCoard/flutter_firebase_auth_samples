@@ -30,7 +30,9 @@ classpath 'com.google.gms:google-services:3.0.0'
 apply plugin: 'com.google.gms.google-services'
 ```
 
-Copy the `google-services.json` in the `android/app/src` directory. You can get this file on your firebase app.
+* Copy the `google-services.json` in the `android/app/src` directory. You can get this file on your firebase app.
+
+* And don't forget to allow the auth methods you want in your Firebase app.
 
 Now your app is linked to Firebase.
 
@@ -58,7 +60,7 @@ NB : the ``--global`` is not mandatory but it prevents havingthe same problems w
 
 ## Author
 
-Alexi Coard <alexi.coard[at]gmail.com>
+Alexi Coard <alexicoard[at]gmail.com>
 
 ## Coming features
 
@@ -68,4 +70,5 @@ Alexi Coard <alexi.coard[at]gmail.com>
 ## Some useful links
 
 [Flutter](http://flutter.io/)
+
 [Firebase](https://firebase.google.com/)

@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,6 +34,32 @@ class _LoginPageState extends State<LoginPage> {
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
+
+
+   _logInAnonymously() async {
+    FirebaseUser user = await auth.signInAnonymously();
+    assert(user != null);
+    assert(user == auth.currentUser);
+    assert(user.isAnonymous);
+    assert(!user.isEmailVerified);
+    if (Platform.isIOS) {
+      // Anonymous auth doesn't show up as a provider on iOS
+      assert(user.providerData.length == 0);
+    } else if (Platform.isAndroid) {
+      // Anonymous auth does show up as a provider on Android
+      assert(user.providerData.length == 1);
+      assert(user.providerData[0].providerId == 'firebase');
+      assert(user.providerData[0].uid != null);
+      assert(user.providerData[0].displayName == null);
+      assert(user.providerData[0].photoUrl == null);
+      assert(user.providerData[0].email == null);
+    }
+    main.connectedUser = user;
+    print("this user is signed in : $user");
+    main.isLoggedIn = true;
+    Navigator.pushReplacementNamed(context, "/");
+  }
+
 
   _logWithGoogle() async {
     GoogleSignInAccount googleUser = await googleSignIn.signIn();
@@ -157,7 +186,8 @@ class _LoginPageState extends State<LoginPage> {
                 buildTile(new Image.asset("images/facebook-logo.png"), 'Log in with Facebook', _logWithFacebook),
                 buildTile(new Image.asset("images/twitter-logo.png"), 'Log in with twitter', _logWithTwitter),
                 buildIconTile(new Icon(Icons.phone), "Log in with Phone", _logWithPhone),
-                buildIconTile(new Icon(Icons.account_circle), "Log in with Phone", _logInWithEmailAndPassword),
+                buildIconTile(new Icon(Icons.mail_outline), "Log in with email", _logInWithEmailAndPassword),
+                buildIconTile(new Icon(Icons.account_circle), "Log anonymously", _logInAnonymously),
               ]
           ),
       )
